@@ -1,0 +1,39 @@
+This is Perl module Class::Accessor::List.
+
+INSTALLATION
+
+Type the following command:
+
+    $ curl -L http://cpanmin.us | perl - Class::Accessor::List
+
+Or install cpanm and then run the following command to install
+Class::Accessor::List:
+
+    $ cpanm Class::Accessor::List
+
+If you get an archive of this distribution, unpack it and build it
+as per the usual:
+
+    $ tar xzf Class-Accessor-List-$version.tar.gz
+    $ cd Class-Accessor-List-$version
+    $ perl Makefile.PL
+    $ make && make test
+
+Then install it:
+
+    $ make install
+
+DOCUMENTATION
+
+Class::Accessor::List documentation is available as in POD. So you can do:
+
+    $ perldoc Class::Accessor::List
+
+to read the documentation online with your favorite pager.
+
+LICENSE AND COPYRIGHT
+
+Copyright (c) 2011, Kenta Sato. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
