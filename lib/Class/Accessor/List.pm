@@ -14,15 +14,39 @@ sub import {
     return unless %opt;
 
     my $caller = caller;
-    $class->mk_accessor(%opt, import_to => $caller);
+    $class->_mk_accessor(%opt, import_to => $caller);
     if (exists $opt{new}) {
         $class->mk_new(import_to => $caller);
     }
 }
 
+sub mk_accessors {
+    my($class, @names) = @_;
+    $class->_mk_accessor(
+        import_to => scalar(caller),
+        rw        => \@names,
+    );
+}
+
+sub mk_ro_accessors {
+    my($class, @names) = @_;
+    $class->_mk_accessor(
+        import_to => scalar(caller),
+        ro        => \@names,
+    );
+}
+
+sub mk_wo_accessors {
+    my($class, @names) = @_;
+    $class->_mk_accessor(
+        import_to => scalar(caller),
+        wo        => \@names,
+    );
+}
+
 my %exists;
 my %counter;
-sub mk_accessor {
+sub _mk_accessor {
     my $class = shift;
     my %opt   = (@_ == 1 and reftype($_[0]) eq 'HASH') ? %{ $_[0] } : @_;
     my $import_to = $opt{import_to} || caller;
@@ -31,7 +55,7 @@ sub mk_accessor {
     $counter{$import_to} ||= 0;
 
     my @mk_accessor_args;
-    foreach my $cond (grep { exists $opt{$_} } $class->accessor_cond) {
+    foreach my $cond (grep { exists $opt{$_} } $class->_accessor_cond) {
         if (reftype($opt{$cond}) eq 'ARRAY') {
             my @hash_arg = grep { ref($_) && reftype($_) eq 'HASH' } @{ $opt{$cond} };
             my @arg      = grep { not reftype($_)                  } @{ $opt{$cond} };
@@ -81,7 +105,7 @@ sub mk_accessor {
 
     foreach my $args (@mk_accessor_args) {
         $args->{where} = $args->{where}->() if (reftype($args->{where}) eq 'CODE');
-        $class->_mk_accessor(%$args);
+        $class->__mk_accessor(%$args);
     }
 }
 
@@ -107,9 +131,9 @@ our %ACCESSOR_CODEREF = (
         }
     },
 );
-sub accessor_cond { keys %ACCESSOR_CODEREF }
+sub _accessor_cond { keys %ACCESSOR_CODEREF }
 
-sub _mk_accessor {
+sub __mk_accessor {
     my $class = shift;
     my %opt   = (@_ == 1 and reftype($_[0]) eq 'HASH') ? %{ $_[0] } : @_;
 
@@ -194,9 +218,21 @@ Accessor for list blessed object.
 
 =head1 INTERFACE
 
-=head2 Functions
+=head2 Methods
 
-=head3 C<< hello() >>
+=head3 C<< mk_accessors() >>
+
+# TODO
+
+=head3 C<< mk_ro_accessors() >>
+
+# TODO
+
+=head3 C<< mk_wo_accessors() >>
+
+# TODO
+
+=head3 C<< mk_new() >>
 
 # TODO
 
